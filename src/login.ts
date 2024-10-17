@@ -520,21 +520,21 @@ export const login = {
     if (!creds) {
       return
     }
+    const expiration = creds.Expiration.toISOString();
+    await awsConfig.setProfileCredentialsAsync(profileName, {
+      aws_access_key_id: creds.AccessKeyId,
+      aws_secret_access_key: creds.SecretAccessKey,
+      aws_session_token: creds.SessionToken,
+      aws_expiration: expiration,
+    });
     if (credentialProcess) {
       console.log(JSON.stringify({
         "Version": 1,
         "AccessKeyId": creds.AccessKeyId,
         "SecretAccessKey": creds.SecretAccessKey,
         "SessionToken": creds.SessionToken,
-        "Expiration": creds.Expiration.toISOString()
+        "Expiration": expiration
       }));
-    } else {
-      await awsConfig.setProfileCredentialsAsync(profileName, {
-        aws_access_key_id: creds.AccessKeyId,
-        aws_secret_access_key: creds.SecretAccessKey,
-        aws_session_token: creds.SessionToken,
-        aws_expiration: creds.Expiration.toISOString(),
-      });
     }
   },
 
